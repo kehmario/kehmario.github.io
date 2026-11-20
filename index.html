@@ -1,7 +1,588 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Fam LLC — Electrical & Firmware Systems Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070b16;
+    --bg-2:#0b1120;
+    --panel:#0f1729;
+    --panel-2:#131d35;
+    --line:#1e2b47;
+    --line-2:#27375a;
+    --txt:#e8edf7;
+    --txt-dim:#9aa8c4;
+    --txt-faint:#64739a;
+    --accent:#38e0c8;
+    --accent-2:#5b9dff;
+    --accent-deep:#0f766e;
+    --gold:#e6b450;
+    --radius:14px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(900px 500px at 78% -5%, rgba(56,224,200,.10), transparent 60%),
+      radial-gradient(700px 600px at 5% 10%, rgba(91,157,255,.08), transparent 55%),
+      linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(30,43,71,.25) 100%) 0 0 / 100% 46px,
+      linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(30,43,71,.25) 100%) 0 0 / 46px 100%;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(14px);
+    background:rgba(7,11,22,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:.3px;font-size:19px}
+  .mark{width:34px;height:34px;flex:0 0 auto}
+  .brand small{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--txt-faint);letter-spacing:1.5px;margin-top:-2px}
+  .nav-links{display:flex;align-items:center;gap:4px}
+  .nav-links a{
+    font-size:14px;color:var(--txt-dim);padding:8px 14px;border-radius:9px;
+    font-weight:500;transition:.18s;cursor:pointer;
+  }
+  .nav-links a:hover{color:var(--txt);background:var(--panel)}
+  .nav-links a.active{color:var(--accent);background:rgba(56,224,200,.08)}
+  .nav-cta{margin-left:8px;border:1px solid var(--line-2);color:var(--txt)!important}
+  .nav-cta:hover{border-color:var(--accent);background:rgba(56,224,200,.06)!important}
+  .burger{display:none;background:none;border:1px solid var(--line-2);border-radius:9px;color:var(--txt);width:42px;height:38px;cursor:pointer;font-size:18px}
+
+  /* VIEWS */
+  .view{display:none;animation:fade .4s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  section{padding:74px 0}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--accent);opacity:.6}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,5.4vw,58px);line-height:1.05;letter-spacing:-1px}
+  h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.4vw,38px);line-height:1.1;letter-spacing:-.5px;margin-bottom:18px}
+  h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px}
+  p.lead{font-size:clamp(16px,1.9vw,19px);color:var(--txt-dim);max-width:640px}
+
+  /* HERO */
+  .hero{padding:96px 0 84px;position:relative}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 34px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.5px;color:var(--txt-dim);border:1px solid var(--line-2);border-radius:999px;padding:6px 13px;background:rgba(15,23,41,.5)}
+  .chip b{color:var(--accent);font-weight:500}
+  .btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;
+    padding:13px 24px;border-radius:11px;cursor:pointer;transition:.18s;border:1px solid transparent;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--accent),#2bb9a4);color:#04201c;box-shadow:0 8px 30px -8px rgba(56,224,200,.5)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px -8px rgba(56,224,200,.6)}
+  .btn-ghost{border-color:var(--line-2);color:var(--txt)}
+  .btn-ghost:hover{border-color:var(--accent);background:rgba(56,224,200,.06)}
+  .arrow{transition:.18s}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+  .code-card{
+    background:linear-gradient(160deg,var(--panel),var(--bg-2));
+    border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.8);
+  }
+  .code-head{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.2)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .code-head span{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-faint);margin-left:10px}
+  .code-body{padding:20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85}
+  .code-body .k{color:var(--accent-2)}
+  .code-body .s{color:var(--accent)}
+  .code-body .c{color:var(--txt-faint)}
+  .code-body .n{color:var(--gold)}
+
+  /* GRID STATS */
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+  .stat{border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;background:rgba(15,23,41,.4)}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:var(--txt);line-height:1}
+  .stat .num span{color:var(--accent)}
+  .stat .lbl{font-size:13px;color:var(--txt-dim);margin-top:8px}
+
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+  .card{
+    border:1px solid var(--line);border-radius:var(--radius);padding:28px;
+    background:linear-gradient(170deg,var(--panel),var(--bg-2));
+    transition:.22s;position:relative;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--line-2)}
+  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:.22s}
+  .card:hover::before{opacity:1}
+  .card .ico{width:46px;height:46px;border-radius:11px;background:rgba(56,224,200,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:var(--accent)}
+  .card p{color:var(--txt-dim);font-size:14.5px}
+  .card .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;display:block}
+  .card ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:9px}
+  .card ul li{font-size:13.5px;color:var(--txt-dim);padding-left:20px;position:relative}
+  .card ul li::before{content:"▸";position:absolute;left:0;color:var(--accent)}
+
+  /* SBIR */
+  .sbir-hero{background:linear-gradient(135deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:20px;padding:44px;margin-bottom:10px;position:relative;overflow:hidden}
+  .sbir-hero::after{content:"";position:absolute;top:-40%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(56,224,200,.12),transparent 70%)}
+  .badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--gold);border:1px solid rgba(230,180,80,.3);background:rgba(230,180,80,.07);padding:6px 13px;border-radius:999px;margin-bottom:20px}
+  .prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
+  .prop{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:rgba(15,23,41,.4)}
+  .prop h3{display:flex;align-items:center;gap:11px}
+  .prop h3 .n{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);border:1px solid var(--line-2);border-radius:7px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .prop p{color:var(--txt-dim);font-size:14.5px;margin-top:6px}
+  .prop.full{grid-column:1/-1}
+
+  table.spec{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+  table.spec td{padding:11px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  table.spec td:first-child{color:var(--txt-faint);font-family:'JetBrains Mono',monospace;font-size:12.5px;width:42%;padding-right:18px}
+  table.spec td:last-child{color:var(--txt)}
+  table.spec tr:last-child td{border-bottom:none}
+
+  .pill-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent);background:rgba(56,224,200,.08);border:1px solid rgba(56,224,200,.2);border-radius:7px;padding:5px 11px}
+
+  .timeline{margin-top:20px;display:flex;flex-direction:column;gap:2px}
+  .tl{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .tl:last-child{border-bottom:none}
+  .tl .ph{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent)}
+  .tl .d h4{font-family:'Space Grotesk',sans-serif;font-size:16px;margin-bottom:4px}
+  .tl .d p{font-size:13.5px;color:var(--txt-dim);margin:0}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+  .founder{border:1px solid var(--line);border-radius:18px;padding:32px;background:linear-gradient(170deg,var(--panel),var(--bg-2))}
+  .founder .av{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#04201c;margin-bottom:18px}
+  .founder .role{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:.5px}
+  .founder p{color:var(--txt-dim);font-size:14.5px;margin-top:14px}
+  .facts{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .facts li{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:rgba(15,23,41,.4)}
+  .facts li .fi{color:var(--accent);flex:0 0 auto;margin-top:2px}
+  .facts li b{display:block;font-size:14.5px;color:var(--txt);font-weight:600}
+  .facts li span{font-size:13.5px;color:var(--txt-dim)}
+
+  /* CONTACT */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+  form{display:flex;flex-direction:column;gap:16px}
+  label{font-size:13px;color:var(--txt-dim);font-weight:500;margin-bottom:6px;display:block}
+  input,textarea{
+    width:100%;background:var(--panel);border:1px solid var(--line-2);border-radius:11px;
+    padding:13px 15px;color:var(--txt);font-family:inherit;font-size:14.5px;transition:.18s;
+  }
+  input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,224,200,.1)}
+  textarea{resize:vertical;min-height:120px}
+  .note{font-size:12.5px;color:var(--txt-faint);font-family:'JetBrains Mono',monospace}
+  .cinfo{display:flex;flex-direction:column;gap:18px}
+  .cinfo .item{display:flex;gap:14px;align-items:flex-start}
+  .cinfo .item .fi{color:var(--accent);margin-top:3px}
+  .cinfo .item b{display:block;font-size:14px}
+  .cinfo .item span{font-size:14px;color:var(--txt-dim)}
+  .toast{font-size:13.5px;color:var(--accent);min-height:20px;font-family:'JetBrains Mono',monospace}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:38px 0;margin-top:40px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px}
+  .foot small{color:var(--txt-faint);font-size:13px}
+  .foot .fl{display:flex;gap:20px}
+  .foot .fl a{font-size:13px;color:var(--txt-dim);cursor:pointer}
+  .foot .fl a:hover{color:var(--accent)}
+
+  @media(max-width:860px){
+    .hero-grid,.about-grid,.contact-grid,.prop-grid{grid-template-columns:1fr}
+    .cards{grid-template-columns:1fr}
+    .stat-row{grid-template-columns:1fr 1fr}
+    .nav-links{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;background:var(--bg-2);border-bottom:1px solid var(--line);padding:14px 24px;gap:4px}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:12px 14px}
+    .burger{display:block}
+    .sbir-hero{padding:28px}
+    .tl{grid-template-columns:1fr}
+  }
+</style>
+</head>
 <body>
-	<h1>Test Website</h1>
-		<p>Series 1</p>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1.5" y="1.5" width="37" height="37" rx="9" stroke="#38e0c8" stroke-width="1.5"/>
+        <path d="M12 11V29M12 20L23 11M12 20L23 29" stroke="#38e0c8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="28" cy="20" r="2.4" fill="#5b9dff"/>
+      </svg>
+      <div>K-Fam LLC<small>SYSTEMS ENGINEERING</small></div>
+    </div>
+    <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')">≡</button>
+    <nav class="nav-links" id="navlinks">
+      <a data-route="home">Home</a>
+      <a data-route="services">Services</a>
+      <a data-route="sbir">SBIR</a>
+      <a data-route="about">About</a>
+      <a data-route="contact" class="nav-cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= HOME ================= -->
+<div class="view" id="home">
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Veteran-Owned Engineering Firm</div>
+        <h1>Hardware-grade security for a post-quantum world.</h1>
+        <div class="chips">
+          <span class="chip"><b>◆</b> Veteran-Owned Small Business</span>
+          <span class="chip"><b>◆</b> SAM.gov Registered</span>
+          <span class="chip"><b>◆</b> Post-Quantum FPGA IP</span>
+        </div>
+        <p class="lead">K-Fam LLC designs electrical and firmware systems for IoT, medical, and SaaS products — with a specialty in NIST post-quantum cryptography implemented directly in silicon.</p>
+        <div class="btns" style="margin-top:28px">
+          <a class="btn btn-primary" data-route="sbir">View SBIR Proposal <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" data-route="services">Our Services</a>
+        </div>
+      </div>
+      <div class="code-card">
+        <div class="code-head">
+          <span class="dot" style="background:#ff5f57"></span>
+          <span class="dot" style="background:#febc2e"></span>
+          <span class="dot" style="background:#28c840"></span>
+          <span>unified_pqc_core.sv</span>
+        </div>
+        <div class="code-body">
+          <div><span class="c">// Dual-modulus arithmetic datapath</span></div>
+          <div><span class="k">module</span> unified_pqc_core #(</div>
+          <div>&nbsp;&nbsp;<span class="k">parameter</span> SEC_LEVEL = <span class="n">5</span>   <span class="c">// 1/3/5</span></div>
+          <div>) (<span class="k">input</span> clk_<span class="n">100mhz</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;<span class="k">axi_stream</span>.slave eth_rx);</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;&nbsp;<span class="s">ML_KEM</span>  kem  <span class="c">// FIPS 203</span></div>
+          <div>&nbsp;&nbsp;<span class="s">ML_DSA</span>  dsa  <span class="c">// FIPS 204</span></div>
+          <div>&nbsp;&nbsp;<span class="s">KECCAK</span>  hash <span class="c">// FIPS 202</span></div>
+          <div>&nbsp;</div>
+          <div><span class="k">endmodule</span> <span class="c">// timing: CLOSED</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">100<span> MHz</span></div><div class="lbl">Timing closure on Arty A7-100T</div></div>
+      <div class="stat"><div class="num">60<span>/60</span></div><div class="lbl">NIST ACVP conformance cases passed</div></div>
+      <div class="stat"><div class="num">3<span>×</span></div><div class="lbl">Peer-reviewed publications</div></div>
+      <div class="stat"><div class="num">1<span> core</span></div><div class="lbl">ML-KEM + ML-DSA, all NIST levels</div></div>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="eyebrow">What We Do</div>
+    <h2>Embedded expertise, from board to bitstream.</h2>
+    <p class="lead">Full-stack electrical engineering under one roof — firmware, hardware, systems, test, and PCB layout — backed by active doctoral research in cryptographic hardware.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2M9 9h6v6H9z"/></svg>
+        </div>
+        <h3>Firmware & Hardware</h3>
+        <p>Embedded firmware, board bring-up, RTL, and PCB layout for products that have to work in the field — not just on the bench.</p>
+      </div>
+      <div class="card">
+        <div class="ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3>Post-Quantum Cryptography</h3>
+        <p>FIPS 203/204 key encapsulation and digital signatures implemented in FPGA fabric, with side-channel hardening and ACVP validation.</p>
+      </div>
+      <div class="card">
+        <div class="ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+        </div>
+        <h3>Regulated Systems</h3>
+        <p>Design and consulting for medical and industrial products where traceability, test coverage, and documentation are non-negotiable.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= SERVICES ================= -->
+<div class="view" id="services">
+  <section>
+    <div class="eyebrow">Engagement Models</div>
+    <h2>Three ways to work with K-Fam.</h2>
+    <p class="lead">Structured for teams that need deep embedded expertise without a full-time hire — or a defensible cryptographic IP block they can license.</p>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">Tier 01 · Retainer</span>
+        <h3>Fractional Hardware & Embedded</h3>
+        <p>A senior R&D engineer embedded in your team on a recurring retainer — covering firmware, hardware, systems, test, and PCB layout as your roadmap demands.</p>
+        <ul>
+          <li>Board bring-up and debug</li>
+          <li>Firmware architecture & review</li>
+          <li>Design-for-test and validation</li>
+          <li>Vendor and BOM support</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">Tier 02 · Consulting</span>
+        <h3>Regulated-Domain Consulting</h3>
+        <p>Project-based engineering for medical, industrial, and IoT products where compliance and documentation carry as much weight as the design itself.</p>
+        <ul>
+          <li>Requirements & architecture</li>
+          <li>Verification & traceability</li>
+          <li>Security & cryptographic review</li>
+          <li>Design history documentation</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">Tier 03 · Licensing</span>
+        <h3>PQC FPGA IP</h3>
+        <p>License a validated post-quantum cryptographic core — ML-KEM and ML-DSA on a single parametric datapath — as a drop-in block for your own hardware.</p>
+        <ul>
+          <li>Parametric NIST levels 1/3/5</li>
+          <li>AXI4-Stream host interface</li>
+          <li>ACVP-validated conformance</li>
+          <li>Integration support included</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:10px">
+    <div class="sbir-hero">
+      <h2 style="margin-bottom:12px">Need government-funded R&D?</h2>
+      <p class="lead" style="margin-bottom:24px">K-Fam is pursuing SBIR funding to productize its post-quantum FPGA accelerator. See the technical proposal summary and development roadmap.</p>
+      <a class="btn btn-primary" data-route="sbir">Read the SBIR proposal <span class="arrow">→</span></a>
+    </div>
+  </section>
+</div>
+
+<!-- ================= SBIR ================= -->
+<div class="view" id="sbir">
+  <section>
+    <div class="sbir-hero">
+      <div class="badge">◆ SBIR / STTR · TECHNICAL PROPOSAL</div>
+      <h1 style="font-size:clamp(28px,4.4vw,46px)">Unified Dual-Modulus PQC Accelerator</h1>
+      <p class="lead" style="margin-top:18px">A single reconfigurable FPGA datapath that performs both NIST post-quantum key encapsulation (ML-KEM) and digital signatures (ML-DSA) — parametric across all three security levels, with a hardware-native Ethernet host interface.</p>
+      <div class="pill-row">
+        <span class="pill">FIPS 203 · ML-KEM</span>
+        <span class="pill">FIPS 204 · ML-DSA</span>
+        <span class="pill">FIPS 202 · Keccak/SHAKE</span>
+        <span class="pill">Arty A7-100T</span>
+        <span class="pill">AXI4-Stream over Ethernet</span>
+      </div>
+    </div>
+
+    <div class="prop-grid">
+      <div class="prop">
+        <h3><span class="n">01</span> The Problem</h3>
+        <p>Cryptographically-relevant quantum computers will break the RSA and elliptic-curve algorithms that protect today's industrial, medical, and defense communications. Adversaries are already harvesting encrypted traffic to decrypt later. NIST has standardized the replacements — but software implementations are too slow and too exposed for constrained, high-assurance embedded systems.</p>
+      </div>
+      <div class="prop">
+        <h3><span class="n">02</span> The Innovation</h3>
+        <p>Most designs implement ML-KEM and ML-DSA as separate blocks, wasting fabric. K-Fam's core unifies them on a <b>single dual-modulus arithmetic datapath</b> with a shared Keccak engine — selectable at compile time across NIST levels 1, 3, and 5. The result is a smaller, cheaper, certifiable block that drops into existing designs.</p>
+      </div>
+      <div class="prop">
+        <h3><span class="n">03</span> Technical Maturity</h3>
+        <p>This is not a concept. A working prototype runs on the Arty A7-100T with timing closed at 100 MHz, validated against NIST's ACVP test vectors, with documented constant-cycle side-channel hardening. The underlying research is peer-reviewed and published.</p>
+      </div>
+      <div class="prop">
+        <h3><span class="n">04</span> Commercial Dual-Use</h3>
+        <p>The same core secures defense tactical radios, FDA-regulated medical telemetry, industrial wireless control, and critical infrastructure — any system facing a multi-decade service life and a federal post-quantum migration mandate.</p>
+      </div>
+
+      <div class="prop full">
+        <h3 style="margin-bottom:8px"><span class="n">◆</span> Technical Specifications</h3>
+        <table class="spec">
+          <tr><td>Target device</td><td>Xilinx Artix-7 (Arty A7-100T) — portable to larger parts</td></tr>
+          <tr><td>Algorithms</td><td>ML-KEM (FIPS 203) + ML-DSA (FIPS 204) on one datapath</td></tr>
+          <tr><td>Hashing</td><td>FIPS 202 Keccak / SHAKE, shared permutation engine</td></tr>
+          <tr><td>Security levels</td><td>Parametric: ML-KEM 512/768/1024, ML-DSA 44/65/87 (compile-time select)</td></tr>
+          <tr><td>Clock</td><td>Timing closure achieved at 100 MHz</td></tr>
+          <tr><td>Host interface</td><td>Ethernet AXI4-Stream (no UART bottleneck)</td></tr>
+          <tr><td>Validation</td><td>NIST ACVP conformance; byte-exact simulation; constant-cycle Decaps</td></tr>
+          <tr><td>Compliance posture</td><td>FPGA is standalone FIPS 203/204 compliant; host only commands it</td></tr>
+        </table>
+      </div>
+
+      <div class="prop full">
+        <h3 style="margin-bottom:8px"><span class="n">◆</span> Proposed Development Roadmap</h3>
+        <div class="timeline">
+          <div class="tl"><div class="ph">PHASE I</div><div class="d"><h4>Feasibility & Hardening</h4><p>Harden the parametric core, complete full FIPS 203/204 conformance across all NIST levels, and demonstrate the standalone FPGA compliance boundary with a host-over-Ethernet reference design.</p></div></div>
+          <div class="tl"><div class="ph">PHASE II</div><div class="d"><h4>Productization & Integration</h4><p>Port to production-grade FPGA/SoC targets, add formal side-channel evaluation, and package the core as a licensable, integration-ready IP block with a documented verification bundle.</p></div></div>
+          <div class="tl"><div class="ph">PHASE III</div><div class="d"><h4>Commercialization</h4><p>Transition the validated core into defense, medical, and industrial platforms through IP licensing and integration support — K-Fam's Tier 03 engagement model.</p></div></div>
+        </div>
+      </div>
+
+      <div class="prop full">
+        <h3 style="margin-bottom:8px"><span class="n">◆</span> Why K-Fam</h3>
+        <p style="margin-bottom:14px">A veteran-owned small business led by a principal investigator whose doctoral research <em>is</em> this technology — not a team spinning up on an unfamiliar topic. The core already exists, is published, and is version-controlled in an open repository.</p>
+        <div class="pill-row">
+          <span class="pill">Veteran-Owned</span>
+          <span class="pill">SAM.gov Registered</span>
+          <span class="pill">3 Peer-Reviewed Papers</span>
+          <span class="pill">Active PhD Research (U. of Houston)</span>
+          <span class="pill">Working Prototype</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:44px">
+      <a class="btn btn-primary" data-route="contact">Discuss a teaming or funding opportunity <span class="arrow">→</span></a>
+    </div>
+  </section>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<div class="view" id="about">
+  <section>
+    <div class="eyebrow">About the Firm</div>
+    <h2>A focused shop with deep roots.</h2>
+    <div class="about-grid">
+      <div class="founder">
+        <div class="av">MK</div>
+        <h3 style="margin-bottom:4px">Mario Keh</h3>
+        <div class="role">FOUNDER · PRINCIPAL ENGINEER</div>
+        <p>Senior R&D electrical engineer and PhD candidate at the University of Houston, researching applied post-quantum cryptography in hardware. Mario's career spans firmware, hardware, systems, test, and PCB design across medical, industrial, and IoT products.</p>
+        <p>His research arc moves from software proof-of-concept through FPGA acceleration, side-channel hardening, and LLM-assisted security auditing — with work published in MDPI Electronics and IEEE venues.</p>
+      </div>
+      <div>
+        <ul class="facts">
+          <li>
+            <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            <div><b>Veteran-Owned Small Business</b><span>Sole proprietor; registered in SAM.gov under computer-engineering NAICS codes.</span></div>
+          </li>
+          <li>
+            <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 4v4"/></svg>
+            <div><b>Based in Katy, Texas</b><span>Serving the Greater Houston area and remote clients nationwide.</span></div>
+          </li>
+          <li>
+            <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <div><b>Applied Research Focus</b><span>Post-quantum cryptography hardware — FPGA, GPU, and side-channel analysis.</span></div>
+          </li>
+          <li>
+            <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            <div><b>Markets Served</b><span>IoT, medical devices, and SaaS-connected hardware systems.</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= CONTACT ================= -->
+<div class="view" id="contact">
+  <section>
+    <div class="eyebrow">Get in Touch</div>
+    <h2>Start a conversation.</h2>
+    <p class="lead">Teaming on an SBIR, licensing the PQC core, or need embedded engineering help — send a note and Mario will respond directly.</p>
+    <div class="contact-grid" style="margin-top:40px">
+      <form onsubmit="return composeMsg(event)">
+        <div>
+          <label>Name</label>
+          <input id="f-name" type="text" placeholder="Jane Smith" required>
+        </div>
+        <div>
+          <label>Email</label>
+          <input id="f-email" type="email" placeholder="jane@company.com" required>
+        </div>
+        <div>
+          <label>Organization</label>
+          <input id="f-org" type="text" placeholder="Agency or company">
+        </div>
+        <div>
+          <label>How can we help?</label>
+          <textarea id="f-msg" placeholder="Tell us about your project or opportunity…" required></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit" style="justify-content:center">Prepare message →</button>
+        <div class="toast" id="toast"></div>
+        <p class="note">Submitting opens your email client with the message pre-filled.</p>
+      </form>
+      <div class="cinfo">
+        <div class="item">
+          <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+          <div><b>Email</b><span id="email-display">your-email@k-fam.com</span></div>
+        </div>
+        <div class="item">
+          <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><b>Location</b><span>Katy, TX · Greater Houston Area</span></div>
+        </div>
+        <div class="item">
+          <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <div><b>Registrations</b><span>Veteran-Owned Small Business · SAM.gov registered</span></div>
+        </div>
+        <div class="item">
+          <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+          <div><b>Capabilities</b><span>Firmware · Hardware · Systems · Test · PCB · PQC FPGA IP</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand" style="font-size:16px">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" style="width:28px;height:28px"><rect x="1.5" y="1.5" width="37" height="37" rx="9" stroke="#38e0c8" stroke-width="1.5"/><path d="M12 11V29M12 20L23 11M12 20L23 29" stroke="#38e0c8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="20" r="2.4" fill="#5b9dff"/></svg>
+      K-Fam LLC
+    </div>
+    <div class="fl">
+      <a data-route="services">Services</a>
+      <a data-route="sbir">SBIR</a>
+      <a data-route="about">About</a>
+      <a data-route="contact">Contact</a>
+    </div>
+    <small>© 2026 K-Fam LLC · Veteran-Owned · Katy, TX</small>
+  </div>
+</footer>
+
+<script>
+  const views = ['home','services','sbir','about','contact'];
+  function show(route){
+    if(!views.includes(route)) route='home';
+    views.forEach(v=>document.getElementById(v).classList.toggle('active', v===route));
+    document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active', a.dataset.route===route));
+    document.getElementById('navlinks').classList.remove('open');
+    window.scrollTo({top:0,behavior:'instant'});
+  }
+  document.addEventListener('click', e=>{
+    const a = e.target.closest('[data-route]');
+    if(a){ e.preventDefault(); const r=a.dataset.route; if(location.hash!=='#'+r){location.hash=r;} else {show(r);} }
+  });
+  window.addEventListener('hashchange', ()=>show(location.hash.slice(1)));
+  show(location.hash.slice(1)||'home');
+
+  function composeMsg(e){
+    e.preventDefault();
+    const name=document.getElementById('f-name').value;
+    const email=document.getElementById('f-email').value;
+    const org=document.getElementById('f-org').value;
+    const msg=document.getElementById('f-msg').value;
+    const to=document.getElementById('email-display').textContent.trim();
+    const subject=encodeURIComponent('K-Fam inquiry — '+name+(org?' ('+org+')':''));
+    const body=encodeURIComponent('From: '+name+'\nEmail: '+email+'\nOrganization: '+(org||'—')+'\n\n'+msg);
+    const toast=document.getElementById('toast');
+    try{ window.location.href='mailto:'+to+'?subject='+subject+'&body='+body; }catch(err){}
+    toast.textContent='Opening your email client…';
+    setTimeout(()=>{toast.textContent='';},4000);
+    return false;
+  }
+</script>
 </body>
 </html>
